@@ -1,7 +1,12 @@
 module.exports = 
 	time: 0
-	rooms: {}
-	bases: {}
-	references: {}
-	factions: {}
-	dialogue: {}
+	rooms:
+		created: true
+	bases:
+		created: true
+	references:
+		created: true
+	factions:
+		created: true
+	dialogue:
+		created: true
