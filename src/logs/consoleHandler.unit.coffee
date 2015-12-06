@@ -6,7 +6,7 @@ describe "consoleHandler", ->
 		mockConsole = 
 			log: jasmine.createSpy "log"
 			info: jasmine.createSpy "info"
-			warning: jasmine.createSpy "warning"
+			warn: jasmine.createSpy "warn"
 			error: jasmine.createSpy "error"
 		consoleHandler.__set__ "console", mockConsole
 	describe "on calling with a severity of \"verbose\"", ->
@@ -15,7 +15,7 @@ describe "consoleHandler", ->
 			expect(mockConsole.log).toHaveBeenCalledWith "A message to log"
 		it "does not call any other methods", ->
 			expect(mockConsole.info).not.toHaveBeenCalled()
-			expect(mockConsole.warning).not.toHaveBeenCalled()
+			expect(mockConsole.warn).not.toHaveBeenCalled()
 			expect(mockConsole.error).not.toHaveBeenCalled()
 	describe "on calling with a severity of \"information\"", ->
 		beforeEach -> consoleHandler "information", "A message to log"
@@ -23,12 +23,12 @@ describe "consoleHandler", ->
 			expect(mockConsole.info).toHaveBeenCalledWith "A message to log"
 		it "does not call any other methods", ->
 			expect(mockConsole.log).not.toHaveBeenCalled()
-			expect(mockConsole.warning).not.toHaveBeenCalled()
+			expect(mockConsole.warn).not.toHaveBeenCalled()
 			expect(mockConsole.error).not.toHaveBeenCalled()
 	describe "on calling with a severity of \"warning\"", ->
 		beforeEach -> consoleHandler "warning", "A message to log"
 		it "calls console.warning", ->
-			expect(mockConsole.warning).toHaveBeenCalledWith "A message to log"
+			expect(mockConsole.warn).toHaveBeenCalledWith "A message to log"
 		it "does not call any other methods", ->
 			expect(mockConsole.log).not.toHaveBeenCalled()
 			expect(mockConsole.info).not.toHaveBeenCalled()
@@ -40,4 +40,4 @@ describe "consoleHandler", ->
 		it "does not call any other methods", ->
 			expect(mockConsole.log).not.toHaveBeenCalled()
 			expect(mockConsole.info).not.toHaveBeenCalled()
-			expect(mockConsole.warning).not.toHaveBeenCalled()
+			expect(mockConsole.warn).not.toHaveBeenCalled()
