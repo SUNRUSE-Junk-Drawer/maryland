@@ -4,14 +4,11 @@ describe "apply", ->
 	beforeEach ->
 		apply = rewire "./apply"
 	it "imports logs/warning", -> expect(apply.__get__ "warning").toBe require "./../logs/warning"
-	it "imports logs/error", -> expect(apply.__get__ "error").toBe require "./../logs/error"
 	describe "on calling", ->
-		mockError = mockWarning = database = patch = undefined
+		mockWarning = database = patch = undefined
 		beforeEach ->
 			mockWarning = jasmine.createSpy "warning"
 			apply.__set__ "warning", mockWarning
-			mockError = jasmine.createSpy "error"
-			apply.__set__ "error", mockError
 
 			database = 
 				objectUnmodifiedByPatch:
@@ -54,26 +51,6 @@ describe "apply", ->
 						a: 23
 						b: 8379
 					subCannotUpdateNull: null
-					subObjectCannotReplaceWithInteger:
-						a: 233987
-						b: 2782
-					subObjectCannotReplaceWithTrue:
-						a: 233987
-						b: 2782
-					subObjectCannotReplaceWithFalse:
-						a: 233987
-						b: 2782
-					subObjectCannotReplaceWithArray:
-						a: 233987
-						b: 2782
-					subObjectCannotReplaceWithString:
-						a: 233987
-						b: 2782
-					subIntegerCannotReplaceWithObject: 34793
-					subTrueCannotReplaceWithObject: true			
-					subFalseCannotReplaceWithObject: false
-					subArrayCannotReplaceWithObject: [4784, 3492]
-					subStringCannotReplaceWithObject: "test unreplaced string"
 				arrayUpdatedByPatch: [979, 1236786, 123768, 214]
 				integerUpdatedByPatch: 120
 				trueBooleanUpdatedByPatch: true
@@ -90,28 +67,691 @@ describe "apply", ->
 					a: 23
 					b: 8379
 				cannotUpdateNull: null
-				objectCannotReplaceWithInteger:
-					a: 233987
-					b: 2782
-				objectCannotReplaceWithTrue:
-					a: 233987
-					b: 2782
-				objectCannotReplaceWithFalse:
-					a: 233987
-					b: 2782
-				objectCannotReplaceWithArray:
-					a: 233987
-					b: 2782
-				objectCannotReplaceWithString:
-					a: 233987
-					b: 2782
-				integerCannotReplaceWithObject: 34793
-				trueCannotReplaceWithObject: true			
-				falseCannotReplaceWithObject: false
-				arrayCannotReplaceWithObject: [4784, 3492]
-				stringCannotReplaceWithObject: "test unreplaced string"
 
+		describe "when the patch attempts to replace", ->
+			beforeEach ->
+				database = 
+					rootUnchangedInteger: 39283
+					rootUnchangedTrue: true
+					rootUnchangedFalse: false
+					rootUnchangedString: "test unchanged string"
+					rootUnchangedArray: [439, 234767, 237]
+					rootUnchangedNull: null
+					unchangedObject:
+						nestedUnchangedInteger: 39283
+						nestedUnchangedTrue: true
+						nestedUnchangedFalse: false
+						nestedUnchangedString: "test unchanged string"
+						nestedUnchangedArray: [439, 234767, 237]
+						nestedUnchangedNull: null
+						nestedDeletedNull: null
 
+			describe "an integer with an object", ->
+				beforeEach ->
+					patch = 
+						rootUnchangedInteger: 
+							a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at rootUnchangedInteger with an object"
+
+			describe "true with an object", ->
+				beforeEach ->
+					patch = 
+						rootUnchangedTrue: 
+							a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at rootUnchangedTrue with an object"
+
+			describe "false with an object", ->
+				beforeEach ->
+					patch = 
+						rootUnchangedFalse: 
+							a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at rootUnchangedFalse with an object"
+			describe "string with an object", ->
+				beforeEach ->
+					patch = 
+						rootUnchangedString: 
+							a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at rootUnchangedString with an object"
+			describe "an array with an object", ->
+				beforeEach ->
+					patch = 
+						rootUnchangedArray: 
+							a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at rootUnchangedArray with an object"
+
+			describe "a nested integer with an object", ->
+				beforeEach ->
+					patch = 
+						unchangedObject:
+							nestedUnchangedInteger: 
+								a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at unchangedObject.nestedUnchangedInteger with an object"
+
+			describe "nested true with an object", ->
+				beforeEach ->
+					patch = 
+						unchangedObject:
+							nestedUnchangedTrue: 
+								a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at unchangedObject.nestedUnchangedTrue with an object"
+
+			describe "nested false with an object", ->
+				beforeEach ->
+					patch = 
+						unchangedObject:
+							nestedUnchangedFalse: 
+								a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at unchangedObject.nestedUnchangedFalse with an object"
+			describe "a nested string with an object", ->
+				beforeEach ->
+					patch = 
+						unchangedObject:
+							nestedUnchangedString: 
+								a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at unchangedObject.nestedUnchangedString with an object"
+			describe "a nested array with an object", ->
+				beforeEach ->
+					patch = 
+						unchangedObject:
+							nestedUnchangedArray: 
+								a: 2387
+
+				it "does not log any warnings", ->
+					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the database", ->
+					try
+						apply database, patch
+
+					expect(database).toEqual
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+
+				it "throws an error", ->
+					expect(-> apply database, patch).toThrowError "The patch attempted to replace the value at unchangedObject.nestedUnchangedArray with an object"
+
+			describe "an object", ->
+				describe "with an integer", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: 354364363
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject with a value"
+
+				describe "with true", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: true
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject with a value"
+
+				describe "with false", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: false
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject with a value"
+
+				describe "with a string", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: "test string"
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject with a value"
+
+				describe "with an array", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: [32, 36346, 235325]
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject with a value"
+
+			describe "a nested object", ->
+				beforeEach ->
+					database = 
+						rootUnchangedInteger: 39283
+						rootUnchangedTrue: true
+						rootUnchangedFalse: false
+						rootUnchangedString: "test unchanged string"
+						rootUnchangedArray: [439, 234767, 237]
+						rootUnchangedNull: null
+						unchangedObject:
+							nestedUnchangedInteger: 39283
+							nestedUnchangedTrue: true
+							nestedUnchangedFalse: false
+							nestedUnchangedString: "test unchanged string"
+							nestedUnchangedArray: [439, 234767, 237]
+							nestedUnchangedNull: null
+							nestedDeletedNull: null
+							nestedUnchangedObject:
+								a: 4823749
+
+				describe "with an integer", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: 
+								nestedUnchangedObject: 354364363
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+								nestedUnchangedObject:
+									a: 4823749
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject.nestedUnchangedObject with a value"
+
+				describe "with true", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: 
+								nestedUnchangedObject: true
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+								nestedUnchangedObject:
+									a: 4823749
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject.nestedUnchangedObject with a value"
+
+				describe "with false", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: 
+								nestedUnchangedObject: false
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+								nestedUnchangedObject:
+									a: 4823749
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject.nestedUnchangedObject with a value"
+
+				describe "with a string", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: 
+								nestedUnchangedObject: "test string"
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+								nestedUnchangedObject:
+									a: 4823749
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject.nestedUnchangedObject with a value"
+
+				describe "with an array", ->
+					beforeEach ->
+						patch = 
+							unchangedObject: 
+								nestedUnchangedObject: [32, 36346, 235325]
+
+					it "does not log any warnings", ->
+						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the database", ->
+						try
+							apply database, patch
+
+						expect(database).toEqual
+							rootUnchangedInteger: 39283
+							rootUnchangedTrue: true
+							rootUnchangedFalse: false
+							rootUnchangedString: "test unchanged string"
+							rootUnchangedArray: [439, 234767, 237]
+							rootUnchangedNull: null
+							unchangedObject:
+								nestedUnchangedInteger: 39283
+								nestedUnchangedTrue: true
+								nestedUnchangedFalse: false
+								nestedUnchangedString: "test unchanged string"
+								nestedUnchangedArray: [439, 234767, 237]
+								nestedUnchangedNull: null
+								nestedDeletedNull: null
+								nestedUnchangedObject:
+									a: 4823749
+
+					it "throws an error", ->
+						expect(-> apply database, patch).toThrowError "The patch attempted to replace the object at unchangedObject.nestedUnchangedObject with a value"
 			
 		describe "when the patch is null", ->
 			beforeEach ->
@@ -159,26 +799,6 @@ describe "apply", ->
 							a: 23
 							b: 8379
 						subCannotUpdateNull: null
-						subObjectCannotReplaceWithInteger:
-							a: 233987
-							b: 2782
-						subObjectCannotReplaceWithTrue:
-							a: 233987
-							b: 2782
-						subObjectCannotReplaceWithFalse:
-							a: 233987
-							b: 2782
-						subObjectCannotReplaceWithArray:
-							a: 233987
-							b: 2782
-						subObjectCannotReplaceWithString:
-							a: 233987
-							b: 2782
-						subIntegerCannotReplaceWithObject: 34793
-						subTrueCannotReplaceWithObject: true			
-						subFalseCannotReplaceWithObject: false
-						subArrayCannotReplaceWithObject: [4784, 3492]
-						subStringCannotReplaceWithObject: "test unreplaced string"
 					arrayUpdatedByPatch: [979, 1236786, 123768, 214]
 					integerUpdatedByPatch: 120
 					trueBooleanUpdatedByPatch: true
@@ -195,26 +815,6 @@ describe "apply", ->
 						a: 23
 						b: 8379
 					cannotUpdateNull: null
-					objectCannotReplaceWithInteger:
-						a: 233987
-						b: 2782
-					objectCannotReplaceWithTrue:
-						a: 233987
-						b: 2782
-					objectCannotReplaceWithFalse:
-						a: 233987
-						b: 2782
-					objectCannotReplaceWithArray:
-						a: 233987
-						b: 2782
-					objectCannotReplaceWithString:
-						a: 233987
-						b: 2782
-					integerCannotReplaceWithObject: 34793
-					trueCannotReplaceWithObject: true			
-					falseCannotReplaceWithObject: false
-					arrayCannotReplaceWithObject: [4784, 3492]
-					stringCannotReplaceWithObject: "test unreplaced string"
 
 		describe "when the patch is non-null", ->
 			beforeEach ->
@@ -256,26 +856,6 @@ describe "apply", ->
 						subCannotUpdateNull:
 							a: 234
 							b: 5387	
-						subObjectCannotReplaceWithInteger: 67868
-						subObjectCannotReplaceWithTrue: true
-						subObjectCannotReplaceWithFalse: false
-						subObjectCannotReplaceWithArray: [2382, 2362]
-						subObjectCannotReplaceWithString: "test misreplacement"
-						subIntegerCannotReplaceWithObject: 
-							a: 34739
-							b: 3479
-						subTrueCannotReplaceWithObject:
-							a: 34739
-							b: 3479			
-						subFalseCannotReplaceWithObject:
-							a: 34739
-							b: 3479
-						subArrayCannotReplaceWithObject: 
-							a: 34739
-							b: 3479
-						subStringCannotReplaceWithObject:
-							a: 34739
-							b: 3479
 					arrayCreatedByPatch: [80, 1129, 24878]
 					integerCreatedByPatch: 23868
 					trueBooleanCreatedByPatch: true
@@ -302,26 +882,6 @@ describe "apply", ->
 					cannotUpdateNull:
 						a: 234
 						b: 5387	
-					objectCannotReplaceWithInteger: 67868
-					objectCannotReplaceWithTrue: true
-					objectCannotReplaceWithFalse: false
-					objectCannotReplaceWithArray: [2382, 2362]
-					objectCannotReplaceWithString: "test misreplacement"
-					integerCannotReplaceWithObject: 
-						a: 34739
-						b: 3479
-					trueCannotReplaceWithObject:
-						a: 34739
-						b: 3479			
-					falseCannotReplaceWithObject:
-						a: 34739
-						b: 3479
-					arrayCannotReplaceWithObject: 
-						a: 34739
-						b: 3479
-					stringCannotReplaceWithObject:
-						a: 34739
-						b: 3479
 
 				apply database, patch
 
@@ -364,26 +924,7 @@ describe "apply", ->
 						subCannotUpdateNull:
 							a: 234
 							b: 5387	
-						subObjectCannotReplaceWithInteger: 67868
-						subObjectCannotReplaceWithTrue: true
-						subObjectCannotReplaceWithFalse: false
-						subObjectCannotReplaceWithArray: [2382, 2362]
-						subObjectCannotReplaceWithString: "test misreplacement"
-						subIntegerCannotReplaceWithObject: 
-							a: 34739
-							b: 3479
-						subTrueCannotReplaceWithObject:
-							a: 34739
-							b: 3479			
-						subFalseCannotReplaceWithObject:
-							a: 34739
-							b: 3479
-						subArrayCannotReplaceWithObject: 
-							a: 34739
-							b: 3479
-						subStringCannotReplaceWithObject:
-							a: 34739
-							b: 3479
+
 					arrayCreatedByPatch: [80, 1129, 24878]
 					integerCreatedByPatch: 23868
 					trueBooleanCreatedByPatch: true
@@ -410,26 +951,6 @@ describe "apply", ->
 					cannotUpdateNull:
 						a: 234
 						b: 5387	
-					objectCannotReplaceWithInteger: 67868
-					objectCannotReplaceWithTrue: true
-					objectCannotReplaceWithFalse: false
-					objectCannotReplaceWithArray: [2382, 2362]
-					objectCannotReplaceWithString: "test misreplacement"
-					integerCannotReplaceWithObject: 
-						a: 34739
-						b: 3479
-					trueCannotReplaceWithObject:
-						a: 34739
-						b: 3479			
-					falseCannotReplaceWithObject:
-						a: 34739
-						b: 3479
-					arrayCannotReplaceWithObject: 
-						a: 34739
-						b: 3479
-					stringCannotReplaceWithObject:
-						a: 34739
-						b: 3479
 			describe "when the patch attempts to create objects which already exist in the database", ->
 				it "does not replace the object already present", ->
 					expect(database.cannotReplace.a).toEqual 23
@@ -471,130 +992,6 @@ describe "apply", ->
 						expect(database.createdByPatch.subCannotUpdateUndefined).toBeUndefined()
 					it "generates a warning", ->
 						expect(mockWarning).toHaveBeenCalledWith "The patch attempted to update the object createdByPatch.subCannotUpdateUndefined, but it does not exist.  It has been skipped."
-			describe "when the patch attempts to replace objects with", ->
-				describe "integers", ->
-					it "does not do so", ->
-						expect(database.objectCannotReplaceWithInteger).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object objectCannotReplaceWithInteger with a value.  It has been skipped."
-				describe "booleans (true)", ->
-					it "does not do so", ->
-						expect(database.objectCannotReplaceWithTrue).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object objectCannotReplaceWithTrue with a value.  It has been skipped."
-				describe "booleans (false)", ->
-					it "does not do so", ->
-						expect(database.objectCannotReplaceWithFalse).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object objectCannotReplaceWithFalse with a value.  It has been skipped."
-				describe "strings", ->
-					it "does not do so", ->
-						expect(database.objectCannotReplaceWithString).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object objectCannotReplaceWithString with a value.  It has been skipped."
-				describe "arrays", ->
-					it "does not do so", ->
-						expect(database.objectCannotReplaceWithArray).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object objectCannotReplaceWithArray with a value.  It has been skipped."
-			describe "when the patch attempts to replace nested objects with", ->
-				describe "integers", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subObjectCannotReplaceWithInteger).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object objectCannotReplaceWithInteger with a value.  It has been skipped."
-				describe "booleans (true)", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subObjectCannotReplaceWithTrue).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object updatedByPatch.subObjectCannotReplaceWithTrue with a value.  It has been skipped."
-				describe "booleans (false)", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subObjectCannotReplaceWithFalse).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object updatedByPatch.subObjectCannotReplaceWithFalse with a value.  It has been skipped."
-				describe "strings", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subObjectCannotReplaceWithString).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object objectCannotReplaceWithString with a value.  It has been skipped."
-				describe "arrays", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subObjectCannotReplaceWithArray).toEqual
-							a: 233987
-							b: 2782
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the object updatedByPatch.subObjectCannotReplaceWithArray with a value.  It has been skipped."
-			describe "when the patch attempts to replace", ->
-				describe "integers with objects", ->
-					it "does not do so", ->
-						expect(database.integerCannotReplaceWithObject).toEqual 34793
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value integerCannotReplaceWithObject with an object.  It has been skipped."
-				describe "booleans (true) with objects", ->
-					it "does not do so", ->
-						expect(database.trueCannotReplaceWithObject).toBe true
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value trueCannotReplaceWithObject with an object.  It has been skipped."
-				describe "booleans (false) with objects", ->
-					it "does not do so", ->
-						expect(database.falseCannotReplaceWithObject).toBe false
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value falseCannotReplaceWithObject with an object.  It has been skipped."
-				describe "strings with objects", ->
-					it "does not do so", ->
-						expect(database.stringCannotReplaceWithObject).toEqual "test unreplaced string"
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value stringCannotReplaceWithObject with an object.  It has been skipped."
-				describe "arrays with objects", ->
-					it "does not do so", ->
-						expect(database.arrayCannotReplaceWithObject).toEqual [4784, 3492]
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value arrayCannotReplaceWithObject with an object.  It has been skipped."
-			describe "when the patch attempts to replace nested", ->
-				describe "integers with objects", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subIntegerCannotReplaceWithObject).toEqual 34793
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value updatedByPatch.subIntegerCannotReplaceWithObject with an object.  It has been skipped."
-				describe "booleans (true) with objects", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subTrueCannotReplaceWithObject).toBe true
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value updatedByPatch.subTrueCannotReplaceWithObject with an object.  It has been skipped."
-				describe "booleans (false) with objects", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subFalseCannotReplaceWithObject).toBe false
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value updatedByPatch.subFalseCannotReplaceWithObject with an object.  It has been skipped."
-				describe "strings with objects", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subStringCannotReplaceWithObject).toEqual "test unreplaced string"
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value updatedByPatch.subStringCannotReplaceWithObject with an object.  It has been skipped."
-				describe "arrays with objects", ->
-					it "does not do so", ->
-						expect(database.updatedByPatch.subArrayCannotReplaceWithObject).toEqual [4784, 3492]
-					it "generates an error", ->
-						expect(mockError).toHaveBeenCalledWith "The patch attempted to replace the value updatedByPatch.subArrayCannotReplaceWithObject with an object.  It has been skipped."
 			describe "can add", ->
 				# Objects are covered below in nested created/updated object.
 				it "arrays", -> expect(database.arrayCreatedByPatch).toEqual [80, 1129, 24878]

@@ -33,9 +33,12 @@ This works to the following rules:
 The following will be logged:
 
 - A warning when an entity was updated but previously deleted by a previous patch.
-- A warning when an entity was updated but not created by a previous patch
-- A warning when the patch attempts to create an object which already exists in the database.
-- An error when the patch attempts to replace an object with a value, and vice versa.
+- A warning when an entity was updated but not created by a previous patch.
+
+The following errors may be thrown:
+
+- The patch attempts to create an object which already exists in the database.
+- The patch attempts to replace an object with a value, and vice versa.
 
 ## generate
 
@@ -56,6 +59,7 @@ This works to the following rules:
 - Properties with objects present in both databases recurse.
 - If there are no changes at all, null is returned.
 
-The following will be logged:
+The following errors may be thrown:
 
-- An error when a property is an object in one database and a value in the other, and vice versa.
+- A property is an object in one database and a value in the other, and vice versa.
+- An object in either database contains a "created" property.
