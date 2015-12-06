@@ -48,8 +48,21 @@ describe "apply", ->
 					subArrayDeletedByPatch: [489, 525, 6246]
 					subStringDeletedByPatch: "test unmodified substring"
 					subCannotReplace:
-						a: 23
-						b: 8379
+						integerToObject: 2323987
+						stringToObject: "test ignored string"
+						falseToObject: false
+						trueToObject: true
+						arrayToObject: [234, 43636, 36]
+						objectToInteger: 
+							a: 3472934
+						objectToString: 
+							a: 3472934
+						objectToFalse: 
+							a: 3472934
+						objectToTrue: 
+							a: 3472934
+						objectToArray: 
+							a: 3472934
 					subCannotUpdateNull: null
 				arrayUpdatedByPatch: [979, 1236786, 123768, 214]
 				integerUpdatedByPatch: 120
@@ -64,8 +77,21 @@ describe "apply", ->
 				falseBooleanDeletedByPatch: false
 				arrayDeletedByPatch: [489, 525, 6246]
 				cannotReplace:
-					a: 23
-					b: 8379
+					integerToObject: 2323987
+					stringToObject: "test ignored string"
+					falseToObject: false
+					trueToObject: true
+					arrayToObject: [234, 43636, 36]
+					objectToInteger: 
+						a: 3472934
+					objectToString: 
+						a: 3472934
+					objectToFalse: 
+						a: 3472934
+					objectToTrue: 
+						a: 3472934
+					objectToArray: 
+						a: 3472934
 				cannotUpdateNull: null
 
 		describe "when the patch attempts to replace", ->
@@ -796,8 +822,21 @@ describe "apply", ->
 						subArrayDeletedByPatch: [489, 525, 6246]
 						subStringDeletedByPatch: "test unmodified substring"
 						subCannotReplace:
-							a: 23
-							b: 8379
+							integerToObject: 2323987
+							stringToObject: "test ignored string"
+							falseToObject: false
+							trueToObject: true
+							arrayToObject: [234, 43636, 36]
+							objectToInteger: 
+								a: 3472934
+							objectToString: 
+								a: 3472934
+							objectToFalse: 
+								a: 3472934
+							objectToTrue: 
+								a: 3472934
+							objectToArray: 
+								a: 3472934
 						subCannotUpdateNull: null
 					arrayUpdatedByPatch: [979, 1236786, 123768, 214]
 					integerUpdatedByPatch: 120
@@ -812,8 +851,21 @@ describe "apply", ->
 					falseBooleanDeletedByPatch: false
 					arrayDeletedByPatch: [489, 525, 6246]
 					cannotReplace:
-						a: 23
-						b: 8379
+						integerToObject: 2323987
+						stringToObject: "test ignored string"
+						falseToObject: false
+						trueToObject: true
+						arrayToObject: [234, 43636, 36]
+						objectToInteger: 
+							a: 3472934
+						objectToString: 
+							a: 3472934
+						objectToFalse: 
+							a: 3472934
+						objectToTrue: 
+							a: 3472934
+						objectToArray: 
+							a: 3472934
 					cannotUpdateNull: null
 
 		describe "when the patch is non-null", ->
@@ -848,8 +900,21 @@ describe "apply", ->
 						subStringDeletedByPatch: null
 						subCannotReplace:
 							created: true
-							b: 786
-							c: 383
+							integerToObject: 
+								a: 3479247
+							stringToObject: 
+								a: 3479247
+							falseToObject: 
+								a: 3479247
+							trueToObject: 
+								a: 3479247
+							arrayToObject: 
+								a: 3479247
+							objectToInteger: 65785
+							objectToString: "test ignored replacement string"
+							objectToFalse: false
+							objectToTrue: true
+							objectToArray: [424, 45, 3, 4636, 35]
 						subCannotUpdateUndefined:
 							a: 234
 							b: 5387
@@ -874,8 +939,21 @@ describe "apply", ->
 					arrayDeletedByPatch: null
 					cannotReplace:
 						created: true
-						b: 786
-						c: 383
+						integerToObject: 
+							a: 3479247
+						stringToObject: 
+							a: 3479247
+						falseToObject: 
+							a: 3479247
+						trueToObject: 
+							a: 3479247
+						arrayToObject: 
+							a: 3479247
+						objectToInteger: 65785
+						objectToString: "test ignored replacement string"
+						objectToFalse: false
+						objectToTrue: true
+						objectToArray: [424, 45, 3, 4636, 35]
 					cannotUpdateUndefined:
 						a: 234
 						b: 5387
@@ -916,8 +994,21 @@ describe "apply", ->
 						subStringDeletedByPatch: null
 						subCannotReplace:
 							created: true
-							b: 786
-							c: 383
+							integerToObject: 
+								a: 3479247
+							stringToObject: 
+								a: 3479247
+							falseToObject: 
+								a: 3479247
+							trueToObject: 
+								a: 3479247
+							arrayToObject: 
+								a: 3479247
+							objectToInteger: 65785
+							objectToString: "test ignored replacement string"
+							objectToFalse: false
+							objectToTrue: true
+							objectToArray: [424, 45, 3, 4636, 35]
 						subCannotUpdateUndefined:
 							a: 234
 							b: 5387
@@ -943,8 +1034,21 @@ describe "apply", ->
 					arrayDeletedByPatch: null
 					cannotReplace:
 						created: true
-						b: 786
-						c: 383
+						integerToObject: 
+							a: 3479247
+						stringToObject: 
+							a: 3479247
+						falseToObject: 
+							a: 3479247
+						trueToObject: 
+							a: 3479247
+						arrayToObject: 
+							a: 3479247
+						objectToInteger: 65785
+						objectToString: "test ignored replacement string"
+						objectToFalse: false
+						objectToTrue: true
+						objectToArray: [424, 45, 3, 4636, 35]
 					cannotUpdateUndefined:
 						a: 234
 						b: 5387
@@ -953,18 +1057,42 @@ describe "apply", ->
 						b: 5387	
 			describe "when the patch attempts to create objects which already exist in the database", ->
 				it "does not replace the object already present", ->
-					expect(database.cannotReplace.a).toEqual 23
-					expect(database.cannotReplace.b).toEqual 8379
-				it "does not update the object already present", ->
-					expect(database.cannotReplace.c).toBeUndefined()
+					expect(database.cannotReplace).toEqual
+						integerToObject: 2323987
+						stringToObject: "test ignored string"
+						falseToObject: false
+						trueToObject: true
+						arrayToObject: [234, 43636, 36]
+						objectToInteger: 
+							a: 3472934
+						objectToString: 
+							a: 3472934
+						objectToFalse: 
+							a: 3472934
+						objectToTrue: 
+							a: 3472934
+						objectToArray: 
+							a: 3472934
 				it "generates a warning", ->
 					expect(mockWarning).toHaveBeenCalledWith "The patch attempted to create the object cannotReplace, but it already existed in the database.  It has been skipped."
 				describe "nested in updates", ->
 					it "does not replace the object already present", ->
-						expect(database.updatedByPatch.subCannotReplace.a).toEqual 23
-						expect(database.updatedByPatch.subCannotReplace.b).toEqual 8379
-					it "does not update the object already present", ->
-						expect(database.updatedByPatch.subCannotReplace.c).toBeUndefined()
+						expect(database.updatedByPatch.subCannotReplace).toEqual
+							integerToObject: 2323987
+							stringToObject: "test ignored string"
+							falseToObject: false
+							trueToObject: true
+							arrayToObject: [234, 43636, 36]
+							objectToInteger: 
+								a: 3472934
+							objectToString: 
+								a: 3472934
+							objectToFalse: 
+								a: 3472934
+							objectToTrue: 
+								a: 3472934
+							objectToArray: 
+								a: 3472934
 					it "generates a warning", ->
 						expect(mockWarning).toHaveBeenCalledWith "The patch attempted to create the object updatedByPatch.subCannotReplace, but it already existed in the database.  It has been skipped."
 			describe "when the patch attempts to update null objects", ->

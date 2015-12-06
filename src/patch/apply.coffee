@@ -8,6 +8,7 @@ recurseCheck = (database, patch, stack) ->
 			if fromPatch is undefined then continue
 			if fromDatabase is null then continue
 			if fromDatabase is undefined then continue
+			if (fromPatch instanceof Object) and (not (fromPatch instanceof Array)) and (fromDatabase instanceof Object) and (not (fromDatabase instanceof Array)) and fromPatch.created then continue
 			if (fromPatch instanceof Object) and (not (fromPatch instanceof Array)) and ((not (fromDatabase instanceof Object)) or (fromDatabase instanceof Array))
 				throw new Error "The patch attempted to replace the value at " + ((stack.concat key).join ".") + " with an object"
 			if (fromDatabase instanceof Object) and (not (fromDatabase instanceof Array)) and ((not (fromPatch instanceof Object)) or (fromPatch instanceof Array))
