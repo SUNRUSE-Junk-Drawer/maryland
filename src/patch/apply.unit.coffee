@@ -121,6 +121,11 @@ describe "apply", ->
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
 
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						rootUnchangedInteger: 
+							a: 2387
+
 				it "does not modify the database", ->
 					try
 						apply database, patch
@@ -152,6 +157,11 @@ describe "apply", ->
 
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						rootUnchangedTrue: 
+							a: 2387
 
 				it "does not modify the database", ->
 					try
@@ -185,6 +195,11 @@ describe "apply", ->
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
 
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						rootUnchangedFalse: 
+							a: 2387
+
 				it "does not modify the database", ->
 					try
 						apply database, patch
@@ -216,6 +231,11 @@ describe "apply", ->
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
 
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						rootUnchangedString: 
+							a: 2387
+
 				it "does not modify the database", ->
 					try
 						apply database, patch
@@ -246,6 +266,11 @@ describe "apply", ->
 
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						rootUnchangedArray: 
+							a: 2387
 
 				it "does not modify the database", ->
 					try
@@ -280,6 +305,12 @@ describe "apply", ->
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
 
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						unchangedObject:
+							nestedUnchangedInteger: 
+								a: 2387
+
 				it "does not modify the database", ->
 					try
 						apply database, patch
@@ -312,6 +343,12 @@ describe "apply", ->
 
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						unchangedObject:
+							nestedUnchangedTrue: 
+								a: 2387
 
 				it "does not modify the database", ->
 					try
@@ -346,6 +383,12 @@ describe "apply", ->
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
 
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						unchangedObject:
+							nestedUnchangedFalse: 
+								a: 2387
+
 				it "does not modify the database", ->
 					try
 						apply database, patch
@@ -377,6 +420,12 @@ describe "apply", ->
 
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
+
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						unchangedObject:
+							nestedUnchangedString: 
+								a: 2387
 
 				it "does not modify the database", ->
 					try
@@ -410,6 +459,12 @@ describe "apply", ->
 				it "does not log any warnings", ->
 					expect(mockWarning).not.toHaveBeenCalled()
 
+				it "does not modify the patch", ->
+					expect(patch).toEqual
+						unchangedObject:
+							nestedUnchangedArray: 
+								a: 2387
+
 				it "does not modify the database", ->
 					try
 						apply database, patch
@@ -442,6 +497,10 @@ describe "apply", ->
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
 
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: 354364363
+
 					it "does not modify the database", ->
 						try
 							apply database, patch
@@ -472,6 +531,10 @@ describe "apply", ->
 
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: true
 
 					it "does not modify the database", ->
 						try
@@ -504,6 +567,10 @@ describe "apply", ->
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
 
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: false
+
 					it "does not modify the database", ->
 						try
 							apply database, patch
@@ -535,6 +602,10 @@ describe "apply", ->
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
 
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: "test string"
+
 					it "does not modify the database", ->
 						try
 							apply database, patch
@@ -565,6 +636,10 @@ describe "apply", ->
 
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: [32, 36346, 235325]
 
 					it "does not modify the database", ->
 						try
@@ -618,6 +693,11 @@ describe "apply", ->
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
 
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: 
+								nestedUnchangedObject: 354364363
+
 					it "does not modify the database", ->
 						try
 							apply database, patch
@@ -651,6 +731,11 @@ describe "apply", ->
 
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: 
+								nestedUnchangedObject: true
 
 					it "does not modify the database", ->
 						try
@@ -686,6 +771,11 @@ describe "apply", ->
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
 
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: 
+								nestedUnchangedObject: false
+
 					it "does not modify the database", ->
 						try
 							apply database, patch
@@ -720,6 +810,11 @@ describe "apply", ->
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
 
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: 
+								nestedUnchangedObject: "test string"
+
 					it "does not modify the database", ->
 						try
 							apply database, patch
@@ -753,6 +848,11 @@ describe "apply", ->
 
 					it "does not log any warnings", ->
 						expect(mockWarning).not.toHaveBeenCalled()
+
+					it "does not modify the patch", ->
+						expect(patch).toEqual
+							unchangedObject: 
+								nestedUnchangedObject: [32, 36346, 235325]
 
 					it "does not modify the database", ->
 						try
