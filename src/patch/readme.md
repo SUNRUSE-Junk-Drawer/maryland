@@ -63,3 +63,7 @@ The following errors may be thrown:
 
 - A property is an object in one database and a value in the other, and vice versa.
 - An object in either database contains a "created" property.
+
+## generateKey
+
+Returns an unique key string on each call which can be used to identify new objects.
